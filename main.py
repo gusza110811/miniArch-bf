@@ -36,16 +36,16 @@ class Compiler:
                     output.append(" add ax, 1")
 
                 case "[":
-                    output.append(f"open_{self.open}:")
+                    output.append(f"o{self.open}:")
                     output.append(" mov ah, 0")
                     output.append(f" cmp ax, 0")
-                    output.append(f" jz close_{self.open}")
+                    output.append(f" jz c{self.open}")
                     self.depth += 1
                     self.open += 1
                 case "]":
                     self.depth -= 1
-                    output.append(f" jmp open_{self.close}")
-                    output.append(f"close_{self.close}:")
+                    output.append(f" jmp o{self.close}")
+                    output.append(f"c{self.close}:")
                     self.close += 1
                 
                 case "<":
@@ -57,7 +57,7 @@ class Compiler:
                     output.append(" add bx, 1")
                     output.append(" mov ax, [b bx]")
                 
-                case ".":\
+                case ".":
                     output.append(" int 0x14")
 
         output.extend([
