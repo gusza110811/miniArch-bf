@@ -1,8 +1,7 @@
 class Compiler:
     def __init__(self, source:str):
-        self.open = 0
-        self.close = 0
-        self.depth = 0
+        self.bracketc = 0
+        self.bracketids = []
         self.index = 0
         self.source = source
         self.length = len(self.source)
@@ -36,17 +35,17 @@ class Compiler:
                     output.append(" add ax, 1")
 
                 case "[":
-                    output.append(f"o{self.open}:")
+                    id = self.bracketc
+                    self.bracketc += 1
+                    self.bracketids.append(id)
+                    output.append(f"o{id}:")
                     output.append(" mov ah, 0")
                     output.append(f" cmp ax, 0")
-                    output.append(f" jz c{self.open}")
-                    self.depth += 1
-                    self.open += 1
+                    output.append(f" jz c{id}")
                 case "]":
-                    self.depth -= 1
-                    output.append(f" jmp o{self.close}")
-                    output.append(f"c{self.close}:")
-                    self.close += 1
+                    id = self.bracketids.pop()
+                    output.append(f" jmp o{id}")
+                    output.append(f"c{id}:")
                 
                 case "<":
                     output.append(" mov [b bx], ax")
