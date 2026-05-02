@@ -1,3 +1,5 @@
+import sys
+
 class Compiler:
     def __init__(self, source:str):
         self.bracketc = 0
@@ -127,9 +129,17 @@ class Compiler:
         return "\n".join(output)
 
 if __name__ == "__main__":
-    test = "-[------->+<]>-.-[->+++++<]>++.+++++++..+++.[->+++++<]>+.------------.---[->+++<]>.-[--->+<]>---.+++.------.--------.-[--->+<]>."
+    if len(sys.argv) > 1:
+        file = sys.argv[1]
+    else:
+        file = "main.bf"
+    
+    try:
+        code = open(file).read()
+    except FileNotFoundError:
+        exit(f"{file} not found")
 
-    compiler = Compiler(test)
+    compiler = Compiler(code)
 
     output = compiler.main()
 
